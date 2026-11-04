@@ -117,6 +117,10 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
 .fillbox summary span{font-weight:400;color:var(--sepia);margin-left:6px}
 .fillbox .note{margin:0;padding:0 20px}
 .hint{font-size:12px;color:var(--sepia)}
+.deploy{margin-top:24px;background:var(--paper-2);border-left:3px solid var(--ink);padding:18px 20px}
+.deploy h3{font-size:15px;font-weight:700;margin:0 0 4px}
+.deploy p{font-size:14px;margin:0}
+.deploy blockquote{margin:12px 0;padding:12px 14px;background:var(--paper);font-size:14px;line-height:1.7;overflow-wrap:anywhere}
 .fillbox .settings{margin-top:8px;background:none;padding:16px 20px 22px}
 @media (max-width:620px){.fillbox .settings{padding:14px 16px 18px}}
 
@@ -259,6 +263,12 @@ footer .sig{font-family:var(--f-latin);font-style:italic;font-size:26px;color:va
     <div class="eyebrow"><i id="tab-eng">Interview</i> <span id="tab-kor">수시 면접</span></div>
     <h2 id="tab-h"></h2>
     <p class="lede" id="tab-lede"></p>
+    <div class="deploy" id="deploy" hidden>
+      <h3>Netlify에 올리려면</h3>
+      <p>AI Studio Build 화면의 채팅창에 아래 프롬프트를 입력하세요.</p>
+      <blockquote id="deploy-text">모든 코드를 index.html 한 파일로 합쳐 줘. React·Tailwind는 CDN으로 불러오고, 설치(npm) 없이 index.html만 열어도 동작하게 해 줘.</blockquote>
+      <button type="button" class="btn primary" id="deploy-copy">프롬프트 복사</button>
+    </div>
     <details class="fillbox" id="fillbox" open>
       <summary><div>빈칸 채우기<span id="fillcount"></span></div></summary>
       <p class="note">여기에 적은 내용이 이 탭 프롬프트의 대괄호 자리에 들어갑니다. 지금은 예시 값입니다. 학생 이름, 학번 같은 개인 정보는 적지 마세요.</p>
@@ -919,6 +929,7 @@ function buildForm(t){
   document.getElementById("fillcount").textContent=" · "+fs.length+"개 항목";
 }
 document.getElementById("f").addEventListener("submit",e=>e.preventDefault());
+document.getElementById("deploy-copy").addEventListener("click",e=>copy(document.getElementById("deploy-text").textContent,e.currentTarget,"복사됨"));
 
 /* tabs */
 const TABS={
@@ -934,6 +945,7 @@ function setTab(t,noHash){
   if(!TABS[t])t="start";
   document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.t===t)));
   document.querySelectorAll("[data-panel]").forEach(s=>{const p=s.dataset.panel;s.hidden=p==="start"?t!=="start":t==="start"});
+  document.getElementById("deploy").hidden=t!=="앱";
   if(t!=="start"){
     const info=TABS[t];
     document.getElementById("tab-eng").textContent=info.eng;
